@@ -1,6 +1,7 @@
-import { Subject }  from 'rxjs';
+import { AsyncSubject }  from 'rxjs';
 
-var subject = new Subject();
+var subject = new AsyncSubject();
+//var subject = new ReplaySubject(10, 200); start with last 10 subscriptions within last 2 seconds 
 
 subject.subscribe(
     data => addItem('Observer 1' + data),
@@ -8,18 +9,15 @@ subject.subscribe(
     () => addItem('Observer 1 completed')
 )
 
-subject.next('first thing has been sent');
+var i = 1;
+var int = setInterval(() => subject.next(i++),100);
 
-var observer2 = subject.subscribe(
-    data => addItem('Observer 2:' + data)
-)
-
-subject.next('second thing has been sent');
-subject.next('third thing has been sent');
-
-observer2.unsubscribe();
-
-subject.next('final thing has been sent');
+setTimeout(() => {
+    var observer2 = subject.subscribe(
+        data => addItem('Observer 2: ' + data)
+    );
+    subject.complete();
+}, 500);
 
 function addItem(val:any) {
     var node = document.createElement("li");

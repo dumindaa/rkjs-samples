@@ -1,6 +1,6 @@
-import { Subject }  from 'rxjs';
+import { BehaviorSubject }  from 'rxjs';
 
-var subject = new Subject();
+var subject = new BehaviorSubject('First');
 
 subject.subscribe(
     data => addItem('Observer 1' + data),
@@ -9,6 +9,7 @@ subject.subscribe(
 )
 
 subject.next('first thing has been sent');
+subject.next('Observer 2 about to start');
 
 var observer2 = subject.subscribe(
     data => addItem('Observer 2:' + data)
